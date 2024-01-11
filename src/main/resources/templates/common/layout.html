@@ -11,9 +11,14 @@
 <h4>Welcome Home !</h4>
 <div>
     <header>
+<!--        -->
         <a th:if="${@request.logout}" th:href="@{/member/login}">로그인</a>
         <a th:if="${@request.login}" th:href="@{/member/logout}">로그아웃</a>
+<!--        -->
         <a th:href="@{/member/signup}">회원가입</a>
+
+<!--        <a th:if="${@request.admin}" th:href="@{/}">회원관리(관리자)</a>-->
+<!--        <a th:if="${@request.admin}" th:href="@{/}">설정(관리자)</a>-->
     </header>
 </div>
 <th:block layout:fragment="content"></th:block>

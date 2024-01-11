@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -51,52 +52,52 @@ public class Request {
         return sb.toString();
     }
 
-    public void setCookie(String name, String value) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setPath("/");
-        resp.addCookie(cookie);
-    }
+//    public void setCookie(String name, String value) {
+//        Cookie cookie = new Cookie(name, value);
+//        cookie.setPath("/");
+//        resp.addCookie(cookie);
+//    }
+//
+//    public void removeCookie(String name) {
+//        Cookie cookie = new Cookie(name, "");
+//        cookie.setMaxAge(0);
+//        cookie.setPath("/");
+//        resp.addCookie(cookie);
+//    }
 
-    public void removeCookie(String name) {
-        Cookie cookie = new Cookie(name, "");
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        resp.addCookie(cookie);
-    }
+//    private String getCookie(String name, String defaultValue) {
+//        Cookie[] cookies = req.getCookies();
+//
+//        if(cookies == null) {
+//            return defaultValue;
+//        }
+//
+//        for (Cookie cookie : cookies ) {
+//            if (cookie.getName().equals(name)) {
+//                return cookie.getValue();
+//            }
+//        }
+//
+//        return defaultValue;
+//
+//    }
+//
+//    private int getCookieAsInt(String name, int defaultValue) {
+//        String cookie = getCookie(name,null);
+//
+//        if (cookie == null) {
+//            return defaultValue;
+//        }
+//
+//        return Integer.parseInt(cookie);
+//    }
 
-    private String getCookie(String name, String defaultValue) {
-        Cookie[] cookies = req.getCookies();
-
-        if(cookies == null) {
-            return defaultValue;
-        }
-
-        for (Cookie cookie : cookies ) {
-            if (cookie.getName().equals(name)) {
-                return cookie.getValue();
-            }
-        }
-
-        return defaultValue;
-
-    }
-
-    private int getCookieAsInt(String name, int defaultValue) {
-        String cookie = getCookie(name,null);
-
-        if (cookie == null) {
-            return defaultValue;
-        }
-
-        return Integer.parseInt(cookie);
-    }
-
-    private int getLoginedMemberId() {
-        return getCookieAsInt("loginedMemberId",0);
+    private Long getLoginedMemberId() {
+        return getSessionAsLong("loginedMemberId",0);
     }
 
     public boolean isLogin() {
-        return getLoginedMemberId() != 0;
+        return getLoginedMemberId() != (long) 0;
     }
 
     public boolean isLogout() {
@@ -118,5 +119,47 @@ public class Request {
 
         }
         return member;
+    }
+
+//    public boolean isAdmin() {
+//        if (isLogin()) {
+//            Member member = getMember();
+//        } else {
+//            return false;
+//        }
+//
+//        if(member.getUsername().equals("admin")) {
+//            setCookie(member.getUsername(),"admin");
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
+
+    public void setSession(String name, Object value) {
+        session.setAttribute(name, value);
+    }
+
+    public Object getSession(String name, Object defaultValue) {
+        Object value = session.getAttribute(name);
+
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return value;
+    }
+
+    public long getSessionAsLong(String name, long defaultValue) {
+        Object value = getSession(name, null);
+
+        if (value == null) return defaultValue;
+
+        return (long) value;
+    }
+
+    public void removeSession(String name) {
+        session.removeAttribute(name);
     }
 }

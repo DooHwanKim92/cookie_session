@@ -41,14 +41,14 @@ public class MemberController {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        request.setCookie("loginedMemberId",member.getId() + "");
+        request.setSession("loginedMemberId",member.getId() + "");
 
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout() {
-        request.removeCookie("loginedMemberId");
+        request.removeSession("loginedMemberId");
         return "redirect:/";
     }
 
